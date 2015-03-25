@@ -1,4 +1,4 @@
-var storage = require('./peopleStorage');
+var storage = require('./peopleStorage')('api/people2.json');
 
 var
    _list = function(req, res) { // /people

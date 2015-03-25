@@ -1,10 +1,11 @@
 var fs = require('fs');
 var uuid = require('node-uuid');
-var people = require('./api/people.json');
+var people = {};
+var path = null;
 var _ = require('lodash');
 
 var _saveState = function(cb) {
-    fs.writeFile('./api/people.json', JSON.stringify(people), cb);
+    fs.writeFile(path, JSON.stringify(people), cb);
     },
     _list = function (cb) {
         var peopleArray = _.values(people);
@@ -39,13 +40,21 @@ var _saveState = function(cb) {
         _saveState(function(err, data){
             cb(null, person);
         });
-    }
+    },
+    config = function(selected_path){
+        path = './' + selected_path;
+        fs.exists(path, function(exists) {
+            if (exists) {
+                people = require(path);
+        }});
 
-;
-module.exports = {
-    get: _get,
-    create: _create,
-    update: _update,
-    delete: _delete,
-    list: _list
-}
+        return {
+            get: _get,
+            create: _create,
+            update: _update,
+            delete: _delete,
+            list: _list
+        }
+    };
+
+module.exports = config;
